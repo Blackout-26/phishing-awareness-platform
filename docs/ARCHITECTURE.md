@@ -1,4 +1,4 @@
-# 📄 Day 2 – Architecture + Mini Threat Modeling
+# Day 2 – Architecture + Mini Threat Modeling
 
 **Objective:** Design the system securely from the very beginning.
 
