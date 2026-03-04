@@ -1,4 +1,4 @@
-# 🏛️ Day 3 – Database Design (Multi-Tenant & Security-Enforced Schema)
+# Day 3 – Database Design (Multi-Tenant & Security-Enforced Schema)
 
 **Objective:** Translate the architectural decisions from Day 2 into a structurally secure relational database design.
 
