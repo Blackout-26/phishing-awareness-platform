@@ -1,8 +1,8 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from simple_history.models import HistoricalRecords
 
 class CustomUser(AbstractUser):
-    # Define the roles based on the engineering plan
     ROLE_CHOICES = (
         ('admin', 'Administrator'),
         ('analyst', 'Security Analyst'),
@@ -14,6 +14,9 @@ class CustomUser(AbstractUser):
         default='analyst',
         help_text="Designates the user's access level."
     )
+    
+    # This single line tracks every change made to this model
+    history = HistoricalRecords()
 
     def __str__(self):
         return f"{self.username} ({self.get_role_display()})"
