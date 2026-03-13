@@ -2,16 +2,16 @@
 
 ## Executive Summary
 
-The **Phishing Awareness Simulation Platform** is a professional cybersecurity system designed specifically for **authorized security testing and employee awareness measurement**.
+The Phishing Awareness Simulation Platform is a professional cybersecurity system designed specifically for authorized security testing and employee awareness measurement.
 
-The platform converts otherwise invisible human susceptibility to phishing attacks into **measurable security intelligence** through controlled and ethical phishing simulations.
+The platform converts otherwise invisible human susceptibility to phishing attacks into measurable security intelligence through controlled and ethical phishing simulations.
 
 Its primary goal is to help organizations:
 
 * Measure human security risk
 * Identify awareness gaps
 * Provide actionable remediation guidance
-* Deliver executive‑level security reporting
+* Deliver executive-level security reporting
 
 By transforming user interaction data into structured metrics, the system strengthens what is commonly referred to as the organization's **"human firewall"**.
 
@@ -21,48 +21,48 @@ By transforming user interaction data into structured metrics, the system streng
 
 The platform follows a **Modular Layered Monolith architecture**, providing strong separation of responsibilities while maintaining operational simplicity and maintainability.
 
-### Frontend
+## Frontend
 
-Administrative dashboards and analytics interfaces built using Django templates.
+Administrative dashboards and analytics interfaces built using **Django templates**.
 
-Responsibilities:
+**Responsibilities:**
 
 * Campaign creation and management
 * Visualization of campaign metrics
 * Executive reporting dashboards
 
-### Backend
+## Backend
 
-Core application logic powered by Django.
+Core application logic powered by **Django**.
 
-Responsibilities:
+**Responsibilities:**
 
 * Campaign lifecycle management
 * Tracking token generation and validation
 * Interaction logging
 * Risk scoring and analytics processing
 
-### Database
+## Database
 
-PostgreSQL using a **multi‑tenant relational schema**.
+**PostgreSQL** using a **multi-tenant relational schema**.
 
-Key design goal:
+**Key design goal:**
 
-* Ensure strict structural data isolation between different organizations using the platform.
+Ensure strict structural data isolation between different organizations using the platform.
 
-### Task Queue
+## Task Queue
 
-Celery combined with Redis handles asynchronous processing.
+**Celery combined with Redis** handles asynchronous processing.
 
-Responsibilities:
+**Responsibilities:**
 
-* High‑volume email dispatch
+* High-volume email dispatch
 * Background analytics tasks
 * Scheduled maintenance jobs
 
-### Deployment
+## Deployment
 
-The system is fully containerized using Docker and Docker Compose to ensure consistent development and production environments.
+The system is fully containerized using **Docker and Docker Compose** to ensure consistent development and production environments.
 
 ---
 
@@ -70,21 +70,29 @@ The system is fully containerized using Docker and Docker Compose to ensure cons
 
 Security controls are embedded directly into the architecture rather than layered on later.
 
-### Multi‑Tenant Data Isolation
+## Multi-Tenant Data Isolation
 
-Every major database record is scoped to an **Organization** entity. This ensures strict separation between tenants and prevents accidental cross‑organization data access.
+Every major database record is scoped to an **Organization** entity.
 
-### Cryptographic Tracking Tokens
+This ensures strict separation between tenants and prevents accidental cross-organization data access.
 
-All tracking identifiers use **UUID4 cryptographically secure random tokens** (minimum 128‑bit entropy). This prevents attackers from guessing tokens and injecting fraudulent interaction data.
+## Cryptographic Tracking Tokens
 
-### Immutable Audit Logging
+All tracking identifiers use **UUID4 cryptographically secure random tokens** (minimum 128-bit entropy).
 
-All sensitive administrative actions are recorded in an **append‑only audit log**. This design ensures full forensic traceability and prevents modification of historical activity records.
+This prevents attackers from guessing tokens and injecting fraudulent interaction data.
 
-### Bot & Email Security Scanner Detection
+## Immutable Audit Logging
 
-Modern email gateways often pre‑scan links automatically. The platform records interaction metadata (IP address and User‑Agent) to support logic that distinguishes between:
+All sensitive administrative actions are recorded in an **append-only audit log**.
+
+This design ensures full forensic traceability and prevents modification of historical activity records.
+
+## Bot & Email Security Scanner Detection
+
+Modern email gateways often pre-scan links automatically.
+
+The platform records interaction metadata (IP address and User-Agent) to support logic that distinguishes between:
 
 * Human interactions
 * Automated email security scanners
@@ -96,11 +104,11 @@ This ensures that campaign metrics remain accurate and trustworthy.
 
 # Ethics & Compliance
 
-The platform is designed with a **privacy‑first mindset**, aligning with modern regulatory principles similar to GDPR and CCPA.
+The platform is designed with a **privacy-first mindset**, aligning with modern regulatory principles similar to **GDPR and CCPA**.
 
-### No‑Plaintext Credential Policy
+## No-Plaintext Credential Policy
 
-The system never stores:
+The system **never stores**:
 
 * Passwords
 * Form field values
@@ -108,11 +116,11 @@ The system never stores:
 
 Only the **event of a submission** is recorded, never the content of the submission itself.
 
-### Authorization Enforcement
+## Authorization Enforcement
 
-No phishing simulation campaign can be activated without a verified **digital authorization record** from an approved organizational stakeholder.
+No phishing simulation campaign can be activated without a **verified digital authorization record** from an approved organizational stakeholder.
 
-### Data Retention Controls
+## Data Retention Controls
 
 Sensitive interaction data is governed by automated retention policies including:
 
@@ -120,49 +128,52 @@ Sensitive interaction data is governed by automated retention policies including
 * Scheduled anonymization
 * Permanent deletion after defined time windows
 
-These controls reduce long‑term privacy and compliance risk.
+These controls reduce long-term privacy and compliance risk.
 
 ---
 
-# The 65‑Day Engineering Journey
+# The 65-Day Engineering Journey
 
-The system is being developed through a structured **13‑week engineering roadmap** designed to simulate a real production development cycle.
+The system is being developed through a **structured 13-week engineering roadmap** designed to simulate a real production development cycle.
 
-### Week 1 – Foundation & System Design (Completed)
+## Week 1 – Foundation & System Design (Completed)
 
-Day 1 — Scope Definition and Ethical Boundaries
-Day 2 — High‑Level Architecture and Threat Modeling
-Day 3 — Multi‑Tenant Database Schema Design
-Day 4 — Tracking Flow and Token Lifecycle Design
-Day 5 — Legal Authorization, Consent, and Data Retention Policy
+* **Day 1** — Scope Definition and Ethical Boundaries
+* **Day 2** — High-Level Architecture and Threat Modeling
+* **Day 3** — Multi-Tenant Database Schema Design
+* **Day 4** — Tracking Flow and Token Lifecycle Design
+* **Day 5** — Legal Authorization, Consent, and Data Retention Policy
 
 This early phase establishes the **security, legal, and architectural foundation** for the entire system.
+
+## Week 2 – Project Setup & Security Foundation (Completed)
+
+* **Day 6** — Initialize Django Project and Repository
+* **Day 7** — Configure PostgreSQL and Secure Credentials
+* **Day 8** — Environment Structure and Settings Isolation (Dev vs. Prod)
+* **Day 9** — Custom User Model and Role-Based Access Control (Admin / Analyst)
+* **Day 10** — Role-Based Permissions and Structured Logging Foundation
+
+This phase established the **core backend environment**, robust database architecture, and strict access boundaries before any feature development began.
 
 ---
 
 # Technology Stack
 
-**Language**
-Python 3.x
-
-**Framework**
-Django
-
-**Database**
-PostgreSQL
-
-**Task Processing**
-Celery + Redis
-
-**Infrastructure**
-Docker and Docker Compose
+| Component       | Technology              |
+| --------------- | ----------------------- |
+| Language        | Python 3.x              |
+| Framework       | Django                  |
+| Database        | PostgreSQL              |
+| Task Processing | Celery + Redis          |
+| Infrastructure  | Docker & Docker Compose |
 
 ---
 
-# ⚠️Legal Disclaimer
+# ⚠️ Legal Disclaimer
 
 This platform is intended **strictly for authorized security awareness training, internal testing, and cybersecurity research**.
 
-Any attempt to use this tool to target individuals or organizations **without explicit written authorization** is strictly prohibited and may violate applicable laws.
+Any attempt to use this tool to target individuals or organizations **without explicit written authorization is strictly prohibited** and may violate applicable laws.
 
-Users of this platform are responsible for ensuring that all simulations are conducted with proper consent and within the scope of organizational security programs.
+Users of this platform are responsible for ensuring that all simulations are conducted with **proper consent** and within the scope of **organizational security programs**.
