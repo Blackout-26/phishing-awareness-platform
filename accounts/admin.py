@@ -1,8 +1,10 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
+from simple_history.admin import SimpleHistoryAdmin
 from .models import CustomUser
 
-class CustomUserAdmin(UserAdmin):
+# Inherit from SimpleHistoryAdmin first, then UserAdmin
+class CustomUserAdmin(SimpleHistoryAdmin, UserAdmin):
     model = CustomUser
     
     # What columns to show in the user list table
