@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'accounts',
     'simple_history',
     'organizations',
+    'campaigns',
 ]
 
 MIDDLEWARE = [
