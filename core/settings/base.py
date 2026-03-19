@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'organizations',
     'campaigns',
     'email_templates',
+    'targets',
 ]
 
 MIDDLEWARE = [
