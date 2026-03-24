@@ -21,4 +21,5 @@ from campaigns import views as campaign_views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', campaign_views.dashboard_view, name='dashboard'),
+    path('campaigns/new/', campaign_views.campaign_create_view, name='campaign_create'),
 ]
