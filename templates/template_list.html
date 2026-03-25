@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block title %}Email Templates | PhishSim{% endblock %}
+{% block header %}Email Templates{% endblock %}
+
+{% block content %}
+<div class="mb-6 flex justify-between items-center">
+    <p class="text-gray-600">Manage the phishing scenarios available for your campaigns.</p>
+    <a href="{% url 'template_create' %}" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition">
+        + New Template
+    </a>
+</div>
+
+<div class="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden">
+    <table class="w-full text-left border-collapse">
+        <thead>
+            <tr class="bg-gray-50 text-gray-700 text-sm uppercase tracking-wider border-b">
+                <th class="px-6 py-4 font-medium">Name</th>
+                <th class="px-6 py-4 font-medium">Subject</th>
+                <th class="px-6 py-4 font-medium">Sender</th>
+            </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-100">
+            {% for template in templates %}
+            <tr class="hover:bg-gray-50 transition">
+                <td class="px-6 py-4 font-medium text-gray-900">{{ template.name }}</td>
+                <td class="px-6 py-4 text-gray-600">{{ template.subject }}</td>
+                <td class="px-6 py-4 text-gray-500 text-sm">{{ template.sender_name }} &lt;{{ template.sender_email }}&gt;</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="3" class="px-6 py-8 text-center text-gray-500">No templates found. Create one to get started!</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

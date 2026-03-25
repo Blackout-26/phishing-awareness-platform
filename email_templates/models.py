@@ -2,22 +2,20 @@ from django.db import models
 from simple_history.models import HistoricalRecords
 
 class EmailTemplate(models.Model):
-    name = models.CharField(max_length=255, help_text="Internal name for this template (e.g., 'IT Password Reset').")
+    name = models.CharField(max_length=255, help_text="Internal name of the template.")
+    subject = models.CharField(max_length=255, help_text="The subject line of the phishing email.")
     
-    # Tie the template to a specific organization for multi-tenant isolation
+    # The fields the form was looking for:
+    body = models.TextField(help_text="The HTML or plain text body of the email.")
+    sender_name = models.CharField(max_length=255, help_text="The name the email appears to be from (e.g., IT Support).")
+    sender_email = models.EmailField(help_text="The email address the email appears to be from.")
+    
     organization = models.ForeignKey(
         'organizations.Organization', 
         on_delete=models.CASCADE, 
-        related_name='email_templates',
-        help_text="The organization that owns this template."
+        related_name='email_templates'
     )
     
-    # The actual email content
-    subject = models.CharField(max_length=255, help_text="The email subject line. Supports variables like {{ target_name }}.")
-    text_body = models.TextField(help_text="The plain-text version of the email. Supports variables.")
-    html_body = models.TextField(help_text="The HTML version of the email. Supports variables and tracking links.")
-    
-    # Audit timestamps
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     

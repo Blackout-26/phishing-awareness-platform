@@ -12,9 +12,9 @@ def campaign_create_view(request):
         form = CampaignCreateForm(request.POST)
         if form.is_valid():
             campaign = form.save(commit=False)
-            campaign.created_by = request.user  # Automatically track who made it
+            campaign.created_by = request.user
             campaign.save()
-            return redirect('dashboard') # Send them back to dashboard after success
+            return redirect('dashboard')
     else:
         form = CampaignCreateForm()
     
