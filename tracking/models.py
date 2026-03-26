@@ -1,5 +1,35 @@
 from django.db import models
 from simple_history.models import HistoricalRecords
+from .utils import generate_tracking_token
+
+class TrackingLink(models.Model):
+    """
+    Generates and stores the secure, unique token for each TargetUser in a Campaign.
+    This acts as the unique bridge between an email and the telemetry events.
+    """
+    campaign = models.ForeignKey('campaigns.Campaign', on_delete=models.CASCADE, related_name='tracking_links')
+    target = models.ForeignKey('targets.TargetUser', on_delete=models.CASCADE, related_name='tracking_links')
+    
+    # The secure token field
+    token = models.CharField(
+        max_length=64, 
+        unique=True, 
+        default=generate_tracking_token, 
+        db_index=True, # Indexed for extremely fast database lookups when a click happens
+        help_text="Cryptographically secure token for URL tracking."
+    )
+    
+    # Quick-reference state
+    is_clicked = models.BooleanField(default=False)
+    clicked_at = models.DateTimeField(null=True, blank=True)
+    
+    # Audit timestamps
+    created_at = models.DateTimeField(auto_now_add=True)
+    history = HistoricalRecords()
+
+    def __str__(self):
+        return f"Token for {self.target.email} - {self.campaign.name}"
+
 
 class ClickEvent(models.Model):
     campaign = models.ForeignKey('campaigns.Campaign', on_delete=models.CASCADE, related_name='click_events')
@@ -15,6 +45,7 @@ class ClickEvent(models.Model):
 
     def __str__(self):
         return f"Click: {self.target.email} at {self.timestamp}"
+
 
 class SubmissionEvent(models.Model):
     campaign = models.ForeignKey('campaigns.Campaign', on_delete=models.CASCADE, related_name='submission_events')
