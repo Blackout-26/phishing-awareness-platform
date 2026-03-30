@@ -15,7 +15,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 from campaigns import views as campaign_views
 from email_templates import views as template_views
 
@@ -25,4 +25,5 @@ urlpatterns = [
     path('campaigns/new/', campaign_views.campaign_create_view, name='campaign_create'),
     path('templates/', template_views.template_list_view, name='template_list'),
     path('templates/new/', template_views.template_create_view, name='template_create'),
+    path('', include('tracking.urls')),
 ]
