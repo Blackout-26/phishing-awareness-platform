@@ -1,11 +1,33 @@
 {% extends 'base.html' %}
 
-{% block title %}Dashboard | PhishSim{% endblock %}
-{% block header %}Overview{% endblock %}
+{% block title %}Telemetry | PhishSim{% endblock %}
+{% block header %}TELEMETRY_OVERVIEW{% endblock %}
 
 {% block content %}
-<div class="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
-    <h2 class="text-lg font-medium text-gray-800 mb-2">Welcome to the Command Center</h2>
-    <p class="text-gray-600">Your system UI foundation is successfully set up and ready for the Campaign Engine.</p>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6 font-mono">
+    <div class="bg-slate-900 border border-slate-800 p-5 rounded-lg border-l-4 border-l-cyan-500 shadow-lg">
+        <p class="text-slate-500 text-xs mb-1 uppercase tracking-wider">Active Campaigns</p>
+        <p class="text-3xl text-slate-100">0</p>
+    </div>
+    <div class="bg-slate-900 border border-slate-800 p-5 rounded-lg border-l-4 border-l-emerald-500 shadow-lg">
+        <p class="text-slate-500 text-xs mb-1 uppercase tracking-wider">Global Click Rate</p>
+        <p class="text-3xl text-slate-100">0.0<span class="text-lg text-slate-500">%</span></p>
+    </div>
+    <div class="bg-slate-900 border border-slate-800 p-5 rounded-lg border-l-4 border-l-rose-500 shadow-lg">
+        <p class="text-slate-500 text-xs mb-1 uppercase tracking-wider">Compromise Rate</p>
+        <p class="text-3xl text-slate-100">0.0<span class="text-lg text-slate-500">%</span></p>
+    </div>
+</div>
+
+<div class="bg-slate-900 p-6 rounded-lg border border-slate-800 shadow-lg">
+    <div class="flex items-center space-x-3 mb-4">
+        <svg class="w-5 h-5 text-cyan-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+        <h2 class="text-lg font-medium text-slate-200">System Initialization Complete</h2>
+    </div>
+    <p class="text-slate-400 font-mono text-sm">
+        > UI framework loaded.<br>
+        > Awaiting campaign deployment orders.<br>
+        > Navigate to Campaigns or Templates to begin simulated attacks.
+    </p>
 </div>
 {% endblock %}

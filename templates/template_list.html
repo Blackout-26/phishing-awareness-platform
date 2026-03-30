@@ -1,35 +1,42 @@
 {% extends 'base.html' %}
 
-{% block title %}Email Templates | PhishSim{% endblock %}
-{% block header %}Email Templates{% endblock %}
+{% block title %}Payloads | PhishSim{% endblock %}
+{% block header %}PAYLOAD_TEMPLATES{% endblock %}
 
 {% block content %}
 <div class="mb-6 flex justify-between items-center">
-    <p class="text-gray-600">Manage the phishing scenarios available for your campaigns.</p>
-    <a href="{% url 'template_create' %}" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition">
-        + New Template
+    <p class="text-slate-400 font-mono text-sm">> Manage simulation email payloads.</p>
+    <a href="{% url 'template_create' %}" class="bg-cyan-600/20 text-cyan-400 border border-cyan-500/50 px-4 py-2 rounded font-mono text-sm hover:bg-cyan-600 hover:text-white transition shadow-[0_0_10px_rgba(6,182,212,0.1)]">
+        + INIT_NEW_TEMPLATE
     </a>
 </div>
 
-<div class="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden">
+<div class="bg-slate-900 rounded-lg border border-slate-800 overflow-hidden shadow-lg">
     <table class="w-full text-left border-collapse">
         <thead>
-            <tr class="bg-gray-50 text-gray-700 text-sm uppercase tracking-wider border-b">
-                <th class="px-6 py-4 font-medium">Name</th>
-                <th class="px-6 py-4 font-medium">Subject</th>
-                <th class="px-6 py-4 font-medium">Sender</th>
+            <tr class="bg-slate-950 text-slate-500 text-xs font-mono uppercase tracking-widest border-b border-slate-800">
+                <th class="px-6 py-4 font-medium">Template_Name</th>
+                <th class="px-6 py-4 font-medium">Subject_Line</th>
+                <th class="px-6 py-4 font-medium">Sender_Config</th>
             </tr>
         </thead>
-        <tbody class="divide-y divide-gray-100">
+        <tbody class="divide-y divide-slate-800/50 font-mono text-sm">
             {% for template in templates %}
-            <tr class="hover:bg-gray-50 transition">
-                <td class="px-6 py-4 font-medium text-gray-900">{{ template.name }}</td>
-                <td class="px-6 py-4 text-gray-600">{{ template.subject }}</td>
-                <td class="px-6 py-4 text-gray-500 text-sm">{{ template.sender_name }} &lt;{{ template.sender_email }}&gt;</td>
+            <tr class="hover:bg-slate-800/50 transition">
+                <td class="px-6 py-4 font-medium text-cyan-400">{{ template.name }}</td>
+                <td class="px-6 py-4 text-slate-300">{{ template.subject }}</td>
+                <td class="px-6 py-4 text-slate-500">
+                    <span class="text-slate-400">{{ template.sender_name }}</span> 
+                    <br>
+                    <span class="text-xs">&lt;{{ template.sender_email }}&gt;</span>
+                </td>
             </tr>
             {% empty %}
             <tr>
-                <td colspan="3" class="px-6 py-8 text-center text-gray-500">No templates found. Create one to get started!</td>
+                <td colspan="3" class="px-6 py-8 text-center text-slate-500 font-mono">
+                    [ NO PAYLOADS FOUND ] <br>
+                    <span class="text-xs">Initialize a new template to populate the database.</span>
+                </td>
             </tr>
             {% endfor %}
         </tbody>
