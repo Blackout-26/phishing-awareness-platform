@@ -148,3 +148,11 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'resend' 
 EMAIL_HOST_PASSWORD = os.getenv('RESEND_API_KEY')
 DEFAULT_FROM_EMAIL = 'onboarding@resend.dev'
+
+# ==========================================
+# Celery Task Queue Configuration
+# ==========================================
+# Use local memory for local testing (No Redis needed on Windows yet)
+CELERY_BROKER_URL = 'memory://'
+# Execute tasks locally immediately for testing purposes
+CELERY_TASK_ALWAYS_EAGER = True
