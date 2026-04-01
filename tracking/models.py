@@ -1,6 +1,7 @@
 from django.db import models
 from simple_history.models import HistoricalRecords
 from .utils import generate_tracking_token
+from django.conf import settings
 
 class TrackingLink(models.Model):
     """
@@ -29,6 +30,13 @@ class TrackingLink(models.Model):
 
     def __str__(self):
         return f"Token for {self.target.email} - {self.campaign.name}"
+
+    @property
+    def get_tracking_url(self):
+        """Generates the full tracking URL for the target to click"""
+        # Falls back to localhost for development if BASE_URL isn't in settings
+        base_url = getattr(settings, 'BASE_URL', 'http://127.0.0.1:8000')
+        return f"{base_url}/track/{self.token}/"
 
 
 class ClickEvent(models.Model):

@@ -3,7 +3,7 @@ from django.conf import settings
 from simple_history.models import HistoricalRecords
 
 class Campaign(models.Model):
-    # Campaign Lifecycle States [cite: 54]
+    # Campaign Lifecycle States
     STATUS_CHOICES = (
         ('draft', 'Draft'),
         ('active', 'Active'),
@@ -12,10 +12,10 @@ class Campaign(models.Model):
 
     name = models.CharField(max_length=255, help_text="The internal name of the phishing campaign.")
     
-    # New Field: Description for administrative notes
-    description = models.TextField(blank=True, null=True, help_text="Internal notes about the campaign objectives.") # 
+    # Description for administrative notes
+    description = models.TextField(blank=True, null=True, help_text="Internal notes about the campaign objectives.")
     
-    # The Architectural Anchor: Link to the Organization [cite: 52]
+    # The Architectural Anchor: Link to the Organization
     organization = models.ForeignKey(
         'organizations.Organization', 
         on_delete=models.CASCADE, 
@@ -23,7 +23,7 @@ class Campaign(models.Model):
         help_text="The organization this campaign belongs to."
     )
 
-    # New Field: Linking to the Email Template [cite: 56]
+    # Linking to the Email Template
     template = models.ForeignKey(
         'email_templates.EmailTemplate',
         on_delete=models.CASCADE,
@@ -38,9 +38,17 @@ class Campaign(models.Model):
         help_text="The current state of the campaign."
     )
     
-    # Scheduling [cite: 30]
-    start_date = models.DateTimeField(null=True, blank=True, help_text="When the campaign should start sending emails.")
-    end_date = models.DateTimeField(null=True, blank=True, help_text="When the campaign stops tracking interactions.")
+    # 🚀 Scheduling Fields
+    start_date = models.DateTimeField(
+        null=True, 
+        blank=True, 
+        help_text="When the campaign should start sending emails. Leave blank for immediate dispatch."
+    )
+    end_date = models.DateTimeField(
+        null=True, 
+        blank=True, 
+        help_text="When the campaign stops tracking interactions."
+    )
     
     # Audit timestamps and ownership
     created_by = models.ForeignKey(
@@ -51,7 +59,7 @@ class Campaign(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     
-    # Enterprise Audit Trail [cite: 60]
+    # Enterprise Audit Trail
     history = HistoricalRecords()
 
     def __str__(self):
