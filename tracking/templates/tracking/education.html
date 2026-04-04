@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Security Simulation Notice</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            color: #333;
+            text-align: center;
+            padding: 50px;
+        }
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 8px;
+            max-width: 600px;
+            margin: 0 auto;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            border-top: 6px solid #e74c3c; /* Alert Red */
+        }
+        h1 { color: #e74c3c; }
+        .tips {
+            text-align: left;
+            background: #fdf2f2;
+            padding: 20px;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Oops! This was a Phishing Simulation.</h1>
+        <p>Hi {{ target.first_name }},</p>
+        <p>You recently clicked a link and submitted credentials on a page that was part of an authorized cybersecurity training exercise (Campaign: {{ campaign.name }}).</p>
+        <p><strong>Don't worry!</strong> We did not save your password, and your account is completely safe.</p>
+        
+        <div class="tips">
+            <h3>🎣 How to spot this next time:</h3>
+            <ul>
+                <li><strong>Check the Sender:</strong> Did the email come from an unfamiliar address?</li>
+                <li><strong>Check the URL:</strong> Before typing your password, always look at the address bar. Does it match the actual service (e.g., microsoft.com)?</li>
+                <li><strong>Sense of Urgency:</strong> Phishing emails often threaten that your password is expiring immediately to make you panic.</li>
+            </ul>
+        </div>
+        <p style="margin-top: 30px; font-size: 14px; color: #777;">Thank you for participating in our security awareness program!</p>
+    </div>
+
+</body>
+</html>

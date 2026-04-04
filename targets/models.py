@@ -10,7 +10,10 @@ class TargetUser(models.Model):
     email = models.EmailField(help_text="The email address of the target recipient.")
     first_name = models.CharField(max_length=150, blank=True, help_text="Target's first name (for email template injection).")
     last_name = models.CharField(max_length=150, blank=True, help_text="Target's last name.")
+    
+    # The department field is perfectly set up for our future analytics!
     department = models.CharField(max_length=100, blank=True, help_text="Department for risk segmentation (e.g., HR, Finance).")
+    
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='active', help_text="Inactive targets will be excluded from campaigns.")
     
     # Tie the target to a specific organization for multi-tenant isolation

@@ -1,7 +1,7 @@
-from django.shortcuts import get_object_or_404, redirect
+from django.shortcuts import render, get_object_or_404, redirect
 from django.utils import timezone
 from django.http import HttpResponse
-from .models import TrackingLink, ClickEvent
+from .models import TrackingLink, ClickEvent, SubmissionEvent
 
 def get_client_ip(request):
     """Helper function to cleanly extract the real IP address from the request."""
@@ -38,10 +38,46 @@ def track_click_view(request, token):
         tracking_link.save()
 
     # 5. Redirect to the phishing simulation landing page
-    return redirect('simulation_landing', token=token)
+    # Notice we use 'tracking:simulation_landing' to respect the app namespace
+    return redirect('tracking:simulation_landing', token=token)
 
-def simulation_landing_placeholder(request, token):
+def simulation_landing(request, token):
     """
-    A temporary placeholder for the landing page until we build the real one.
+    The fake login page. 
+    GET: Renders the fake login form.
+    POST: Logs the submission event (credential compromise) and redirects to education.
     """
-    return HttpResponse(f"<h1>Simulated Login Page</h1><p>Target Successfully Tracked. Your token is: {token}</p>")
+    tracking_link = get_object_or_404(TrackingLink, token=token)
+    
+    if request.method == "POST":
+        # The target fell for the simulation and submitted the form!
+        # Securely log the interaction. Notice we DO NOT extract or save the password.
+        SubmissionEvent.objects.create(
+            campaign=tracking_link.campaign,
+            target=tracking_link.target,
+            ip_address=get_client_ip(request),
+            user_agent=request.META.get('HTTP_USER_AGENT', '')[:255],
+            is_compromised=True
+        )
+        
+        # Instantly redirect them to the educational training page
+        return redirect('tracking:education_page', token=token)
+        
+    # If it's a GET request, render the fake login HTML template
+    context = {
+        'target': tracking_link.target,
+        'token': token,
+    }
+    return render(request, 'tracking/fake_login.html', context)
+
+def education_page(request, token):
+    """
+    The friendly 'Oops, this was a security simulation' page.
+    """
+    tracking_link = get_object_or_404(TrackingLink, token=token)
+    
+    context = {
+        'target': tracking_link.target,
+        'campaign': tracking_link.campaign
+    }
+    return render(request, 'tracking/education.html', context)
