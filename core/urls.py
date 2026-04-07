@@ -10,9 +10,13 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', campaign_views.dashboard_view, name='dashboard'),
     path('campaigns/new/', campaign_views.campaign_create_view, name='campaign_create'),
+    
+    # NEW: Campaign Analytics Dashboard
+    path('campaigns/<int:pk>/dashboard/', campaign_views.campaign_dashboard, name='campaign_dashboard'),
+    
     path('templates/', template_views.template_list_view, name='template_list'),
     path('templates/new/', template_views.template_create_view, name='template_create'),
     
-    #Route all /track/... URLs to the tracking app
+    # Route all /track/... URLs to the tracking app
     path('track/', include('tracking.urls')),
 ]

@@ -1,36 +1,38 @@
-from django.shortcuts import render, redirect
+import json
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.utils import timezone  # NEW: Import timezone for scheduling
+from django.utils import timezone  
+from django.db.models import Count, F
+
 from .forms import CampaignCreateForm
-from .tasks import dispatch_campaign_emails  # Import our Celery task
+from .models import Campaign
+from .tasks import dispatch_campaign_emails  
+from tracking.models import TrackingLink, ClickEvent, SubmissionEvent
 
 @login_required
 def dashboard_view(request):
-    return render(request, 'dashboard.html')
+    # Fetch all campaigns created by the user, newest first
+    campaigns = Campaign.objects.filter(created_by=request.user).order_by('-created_at')
+    
+    # Pass the campaigns to the dashboard template
+    return render(request, 'dashboard.html', {'campaigns': campaigns})
 
 @login_required
 def campaign_create_view(request):
     if request.method == 'POST':
         form = CampaignCreateForm(request.POST)
         if form.is_valid():
-            # Save the campaign but don't commit to DB just yet
             campaign = form.save(commit=False)
-            # Assign the user who created it
             campaign.created_by = request.user
-            # Now save to the database so it gets an ID
             campaign.save()
             
             # 🚀 SCHEDULING LOGIC
             if campaign.start_date and campaign.start_date > timezone.now():
-                # Schedule the task for the future using 'eta' (Estimated Time of Arrival)
                 dispatch_campaign_emails.apply_async(args=[campaign.id], eta=campaign.start_date)
-                
-                # Format the time nicely for the UI notification
                 formatted_time = campaign.start_date.strftime('%b %d, %Y at %I:%M %p')
                 messages.success(request, f"Campaign '{campaign.name}' scheduled for deployment on {formatted_time}.")
             else:
-                # No future date provided? Fire immediately using standard delay()
                 dispatch_campaign_emails.delay(campaign.id)
                 messages.success(request, f"Campaign '{campaign.name}' launched! Emails are being dispatched immediately.")
             
@@ -39,3 +41,56 @@ def campaign_create_view(request):
         form = CampaignCreateForm()
     
     return render(request, 'campaign_create.html', {'form': form})
+
+@login_required
+def campaign_dashboard(request, pk):
+    """
+    Calculates and visualizes the human risk metrics for a specific campaign.
+    """
+    campaign = get_object_or_404(Campaign, pk=pk)
+
+    # 1. Base Metrics
+    total_targets = TrackingLink.objects.filter(campaign=campaign).count()
+
+    human_clicks = ClickEvent.objects.filter(
+        campaign=campaign,
+        is_bot=False
+    ).values('target').distinct().count()
+
+    compromised = SubmissionEvent.objects.filter(
+        campaign=campaign
+    ).values('target').distinct().count()
+
+    # 2. Calculate Rates & Scoring
+    click_rate = round((human_clicks / total_targets * 100) if total_targets > 0 else 0, 1)
+    submission_rate = round((compromised / total_targets * 100) if total_targets > 0 else 0, 1)
+    
+    # Awareness Score: A simple baseline metric (100% minus the compromise rate)
+    awareness_score = 100 - submission_rate 
+
+    # 3. Department Analytics
+    department_stats = SubmissionEvent.objects.filter(
+        campaign=campaign
+    ).values(
+        dept_name=F('target__department')
+    ).annotate(
+        compromised_count=Count('target', distinct=True)
+    ).order_by('-compromised_count')
+
+    # Prepare data arrays for Chart.js
+    dept_labels = [stat['dept_name'] or 'Unknown' for stat in department_stats]
+    dept_data = [stat['compromised_count'] for stat in department_stats]
+
+    context = {
+        'campaign': campaign,
+        'total_targets': total_targets,
+        'human_clicks': human_clicks,
+        'compromised': compromised,
+        'click_rate': click_rate,
+        'submission_rate': submission_rate,
+        'awareness_score': awareness_score,
+        'dept_labels_json': json.dumps(dept_labels),
+        'dept_data_json': json.dumps(dept_data),
+    }
+
+    return render(request, 'campaigns/dashboard.html', context)

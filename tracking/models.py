@@ -47,12 +47,16 @@ class ClickEvent(models.Model):
     ip_address = models.GenericIPAddressField(null=True, blank=True, help_text="Used to filter out automated security scanners.")
     user_agent = models.TextField(blank=True)
     
+    # NEW: Flag to separate human clicks from automated email scanner bots
+    is_bot = models.BooleanField(default=False, help_text="True if clicked by a known security scanner.")
+    
     # Audit timestamps
     timestamp = models.DateTimeField(auto_now_add=True)
     history = HistoricalRecords()
 
     def __str__(self):
-        return f"Click: {self.target.email} at {self.timestamp}"
+        bot_tag = "[BOT] " if self.is_bot else ""
+        return f"{bot_tag}Click: {self.target.email} at {self.timestamp}"
 
 
 class SubmissionEvent(models.Model):

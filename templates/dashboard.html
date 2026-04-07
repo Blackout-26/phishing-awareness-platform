@@ -7,15 +7,58 @@
 <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6 font-mono">
     <div class="bg-slate-900 border border-slate-800 p-5 rounded-lg border-l-4 border-l-cyan-500 shadow-lg">
         <p class="text-slate-500 text-xs mb-1 uppercase tracking-wider">Active Campaigns</p>
-        <p class="text-3xl text-slate-100">0</p>
+        <p class="text-3xl text-slate-100">{{ campaigns|length }}</p>
     </div>
     <div class="bg-slate-900 border border-slate-800 p-5 rounded-lg border-l-4 border-l-emerald-500 shadow-lg">
         <p class="text-slate-500 text-xs mb-1 uppercase tracking-wider">Global Click Rate</p>
-        <p class="text-3xl text-slate-100">0.0<span class="text-lg text-slate-500">%</span></p>
+        <p class="text-3xl text-slate-100">--<span class="text-lg text-slate-500">%</span></p>
     </div>
     <div class="bg-slate-900 border border-slate-800 p-5 rounded-lg border-l-4 border-l-rose-500 shadow-lg">
         <p class="text-slate-500 text-xs mb-1 uppercase tracking-wider">Compromise Rate</p>
-        <p class="text-3xl text-slate-100">0.0<span class="text-lg text-slate-500">%</span></p>
+        <p class="text-3xl text-slate-100">--<span class="text-lg text-slate-500">%</span></p>
+    </div>
+</div>
+
+<div class="bg-slate-900 p-6 rounded-lg border border-slate-800 shadow-lg mb-6 font-mono">
+    <div class="flex justify-between items-center mb-6">
+        <h2 class="text-lg font-medium text-slate-200">Active Deployments</h2>
+        <a href="{% url 'campaign_create' %}" class="bg-cyan-600 hover:bg-cyan-500 text-slate-900 font-bold px-4 py-2 rounded text-sm transition-colors">
+            + INIT_CAMPAIGN
+        </a>
+    </div>
+
+    <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse">
+            <thead>
+                <tr class="border-b border-slate-700 text-slate-500 text-xs uppercase tracking-wider">
+                    <th class="p-3 font-normal">Campaign Name</th>
+                    <th class="p-3 font-normal">Status</th>
+                    <th class="p-3 font-normal">Date Created</th>
+                    <th class="p-3 font-normal text-right">Actions</th>
+                </tr>
+            </thead>
+            <tbody class="text-slate-300 text-sm">
+                {% for campaign in campaigns %}
+                <tr class="border-b border-slate-800/50 hover:bg-slate-800/30 transition-colors">
+                    <td class="p-3 font-medium text-slate-200">{{ campaign.name }}</td>
+                    <td class="p-3 text-emerald-500">Live</td>
+                    <td class="p-3 text-slate-400">{{ campaign.created_at|date:"M d, Y" }}</td>
+                    <td class="p-3 text-right">
+                        <a href="{% url 'campaign_dashboard' campaign.pk %}" class="text-cyan-400 hover:text-cyan-300 underline underline-offset-4">
+                            [View_Analytics]
+                        </a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="4" class="p-8 text-center text-slate-500">
+                        > NO_CAMPAIGNS_FOUND.<br>
+                        > Awaiting deployment orders.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
 </div>
 
@@ -26,8 +69,8 @@
     </div>
     <p class="text-slate-400 font-mono text-sm">
         > UI framework loaded.<br>
-        > Awaiting campaign deployment orders.<br>
-        > Navigate to Campaigns or Templates to begin simulated attacks.
+        > Analytics engine online.<br>
+        > System ready.
     </p>
 </div>
 {% endblock %}

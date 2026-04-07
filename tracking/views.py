@@ -12,9 +12,24 @@ def get_client_ip(request):
         ip = request.META.get('REMOTE_ADDR')
     return ip
 
+def detect_bot(user_agent):
+    """
+    Checks the User-Agent string against a list of known email security scanners and web crawlers.
+    """
+    if not user_agent:
+        return False
+        
+    bot_signatures = [
+        'bot', 'crawler', 'spider', 'slurp', 'google-read-aloud', 
+        'googleimageproxy', 'microsoftpreview', 'mimecast', 'barracuda',
+        'proofpoint', 'yandex', 'bingbot'
+    ]
+    user_agent_lower = user_agent.lower()
+    return any(sig in user_agent_lower for sig in bot_signatures)
+
 def track_click_view(request, token):
     """
-    Validates the token, logs the click event, and redirects to the simulation page.
+    Validates the token, logs the click event (filtering bots), and redirects to the simulation page.
     """
     # 1. Resolve the secure token. If it doesn't exist, return a 404.
     tracking_link = get_object_or_404(TrackingLink, token=token)
@@ -22,22 +37,26 @@ def track_click_view(request, token):
     # 2. Extract basic telemetry data
     ip_address = get_client_ip(request)
     user_agent = request.META.get('HTTP_USER_AGENT', '')[:255] # Truncated for database safety
+    
+    # 3. Evaluate if this request is from an automated scanner
+    is_scanner_bot = detect_bot(user_agent)
 
-    # 3. Securely record the immutable ClickEvent
+    # 4. Securely record the immutable ClickEvent, flagging it if it's a bot
     ClickEvent.objects.create(
         campaign=tracking_link.campaign,
         target=tracking_link.target,
         ip_address=ip_address,
-        user_agent=user_agent
+        user_agent=user_agent,
+        is_bot=is_scanner_bot
     )
 
-    # 4. Update the TrackingLink quick-reference state if it's the first time being clicked
-    if not tracking_link.is_clicked:
+    # 5. Update the TrackingLink quick-reference state ONLY if it was a real human interaction
+    if not is_scanner_bot and not tracking_link.is_clicked:
         tracking_link.is_clicked = True
         tracking_link.clicked_at = timezone.now()
         tracking_link.save()
 
-    # 5. Redirect to the phishing simulation landing page
+    # 6. Redirect to the phishing simulation landing page
     # Notice we use 'tracking:simulation_landing' to respect the app namespace
     return redirect('tracking:simulation_landing', token=token)
 

@@ -1,0 +1,131 @@
+{% extends 'base.html' %}
+
+{% block title %}Analytics - {{ campaign.name }} | PhishSim{% endblock %}
+
+{% block header %}
+ANALYTICS_ENGINE // {{ campaign.name|upper }}
+{% endblock %}
+
+{% block content %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<div class="flex justify-between items-center mb-6 font-mono text-sm">
+    <a href="{% url 'dashboard' %}" class="text-cyan-400 hover:text-cyan-300 transition-colors flex items-center">
+        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+        RETURN_TO_HUB
+    </a>
+    <span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/50 px-3 py-1 rounded-full uppercase tracking-widest text-xs font-bold">
+        Status: Live
+    </span>
+</div>
+
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8 font-mono">
+    
+    <div class="bg-slate-900 border border-slate-800 p-5 rounded-lg border-l-4 border-l-indigo-500 shadow-lg">
+        <p class="text-slate-500 text-xs mb-1 uppercase tracking-wider">Total Targets</p>
+        <p class="text-3xl text-slate-100">{{ total_targets }}</p>
+    </div>
+
+    <div class="bg-slate-900 border border-slate-800 p-5 rounded-lg border-l-4 border-l-cyan-500 shadow-lg flex flex-col justify-between">
+        <div>
+            <p class="text-slate-500 text-xs mb-1 uppercase tracking-wider">Human Clicks</p>
+            <p class="text-3xl text-slate-100">{{ human_clicks }}</p>
+        </div>
+        <p class="text-xs text-slate-500 mt-2">Click Rate: <span class="text-cyan-400">{{ click_rate }}%</span></p>
+    </div>
+
+    <div class="bg-slate-900 border border-slate-800 p-5 rounded-lg border-l-4 border-l-rose-500 shadow-lg flex flex-col justify-between">
+        <div>
+            <p class="text-slate-500 text-xs mb-1 uppercase tracking-wider">Compromised</p>
+            <p class="text-3xl text-rose-500">{{ compromised }}</p>
+        </div>
+        <p class="text-xs text-slate-500 mt-2">Submission Rate: <span class="text-rose-400">{{ submission_rate }}%</span></p>
+    </div>
+
+    <div class="bg-slate-900 border border-slate-800 p-5 rounded-lg border-l-4 border-l-emerald-500 shadow-lg">
+        <p class="text-slate-500 text-xs mb-1 uppercase tracking-wider">Awareness Score</p>
+        <p class="text-3xl text-emerald-400">{{ awareness_score }}<span class="text-lg text-emerald-600">%</span></p>
+    </div>
+
+</div>
+
+<div class="bg-slate-900 p-6 rounded-lg border border-slate-800 shadow-lg">
+    <div class="flex items-center space-x-3 mb-6">
+        <svg class="w-5 h-5 text-cyan-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+        <h2 class="text-lg font-medium text-slate-200">Department Risk Vector Analysis</h2>
+    </div>
+    
+    <div class="w-full max-w-4xl mx-auto h-80">
+        <canvas id="departmentChart"></canvas>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const ctx = document.getElementById('departmentChart').getContext('2d');
+        
+        // Securely parse the JSON strings sent from Django
+        const labels = JSON.parse('{{ dept_labels_json|escapejs }}');
+        const data = JSON.parse('{{ dept_data_json|escapejs }}');
+
+        // Configure Chart.js globally for the dark theme
+        Chart.defaults.color = '#94a3b8'; // text-slate-400
+        Chart.defaults.font.family = "'Inter', sans-serif";
+
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Compromised Accounts',
+                    data: data,
+                    backgroundColor: 'rgba(244, 63, 94, 0.2)', // rose-500 with opacity
+                    borderColor: 'rgba(244, 63, 94, 1)',       // rose-500 solid
+                    borderWidth: 1,
+                    borderRadius: 4,
+                    hoverBackgroundColor: 'rgba(244, 63, 94, 0.4)'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false // Hide legend for a cleaner look
+                    },
+                    tooltip: {
+                        backgroundColor: '#1e293b',
+                        titleColor: '#f8fafc',
+                        bodyColor: '#cbd5e1',
+                        borderColor: '#334155',
+                        borderWidth: 1,
+                        padding: 10,
+                        displayColors: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: { 
+                            stepSize: 1, // Whole numbers only
+                            color: '#64748b' // text-slate-500
+                        },
+                        grid: {
+                            color: '#334155', // border-slate-700
+                            drawBorder: false
+                        }
+                    },
+                    x: {
+                        ticks: {
+                            color: '#64748b'
+                        },
+                        grid: {
+                            display: false // Hide vertical grid lines for a cleaner UI
+                        }
+                    }
+                }
+            }
+        });
+    });
+</script>
+{% endblock %}
