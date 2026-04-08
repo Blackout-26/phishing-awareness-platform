@@ -14,9 +14,17 @@ ANALYTICS_ENGINE // {{ campaign.name|upper }}
         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
         RETURN_TO_HUB
     </a>
-    <span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/50 px-3 py-1 rounded-full uppercase tracking-widest text-xs font-bold">
-        Status: Live
-    </span>
+    
+    <div class="flex space-x-3">
+        <a href="{% url 'campaign_pdf_report' campaign.pk %}" class="bg-indigo-600 hover:bg-indigo-500 text-white border border-indigo-500 px-3 py-1 rounded flex items-center transition-colors">
+            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+            EXPORT_PDF
+        </a>
+        
+        <span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/50 px-3 py-1 rounded uppercase tracking-widest text-xs font-bold flex items-center">
+            Status: Live
+        </span>
+    </div>
 </div>
 
 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8 font-mono">
