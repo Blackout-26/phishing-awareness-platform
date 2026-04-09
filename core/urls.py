@@ -1,13 +1,19 @@
 """
 URL configuration for core project.
 """
+import os
 from django.contrib import admin
 from django.urls import path, include
 from campaigns import views as campaign_views
 from email_templates import views as template_views
 
+# Fetch the custom admin URL from the environment, fallback to 'admin/' if missing
+ADMIN_URL = os.environ.get('ADMIN_URL', 'admin/')
+
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    # Hardened Admin Route
+    path(ADMIN_URL, admin.site.urls),
+    
     path('', campaign_views.dashboard_view, name='dashboard'),
     path('campaigns/new/', campaign_views.campaign_create_view, name='campaign_create'),
     

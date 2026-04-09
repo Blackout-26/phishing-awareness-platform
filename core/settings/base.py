@@ -30,7 +30,26 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 # This ensures DEBUG is evaluated as a boolean
 DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
-ALLOWED_HOSTS = []
+# Allow specific hostnames based on our .env file
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '').split(',')
+
+# ==========================================
+# 🛑 PRODUCTION SECURITY CONTROLS
+# ==========================================
+if not DEBUG:
+    # 1. Prevent Clickjacking (X-Frame-Options) [cite: 1]
+    X_FRAME_OPTIONS = 'DENY'
+    
+    # 2. Prevent browsers from guessing content types (MIME-Sniffing)
+    SECURE_CONTENT_TYPE_NOSNIFF = True
+    
+    # 3. Force cookies to only be sent over HTTPS [cite: 1]
+    CSRF_COOKIE_SECURE = True
+    SESSION_COOKIE_SECURE = True
+    
+    # Note: SECURE_SSL_REDIRECT = True is highly recommended for production, 
+    # but we will leave it commented out until our final deployment day 
+    # to ensure our cloud provider handles the SSL certificates properly first.
 
 
 # Application definition
