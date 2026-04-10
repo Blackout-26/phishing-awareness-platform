@@ -8,9 +8,9 @@ ENV PYTHONUNBUFFERED=1
 # Set the working directory in the container
 WORKDIR /app
 
-# Install system dependencies (required for psycopg2/PostgreSQL)
+# Install system dependencies (required for PostgreSQL and Pycairo/PDF generation)
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends gcc libpq-dev \
+    && apt-get install -y --no-install-recommends gcc libpq-dev pkg-config libcairo2-dev \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
