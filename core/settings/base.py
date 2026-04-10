@@ -37,13 +37,13 @@ ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '').split(',')
 # 🛑 PRODUCTION SECURITY CONTROLS
 # ==========================================
 if not DEBUG:
-    # 1. Prevent Clickjacking (X-Frame-Options) [cite: 1]
+    # 1. Prevent Clickjacking (X-Frame-Options)
     X_FRAME_OPTIONS = 'DENY'
     
     # 2. Prevent browsers from guessing content types (MIME-Sniffing)
     SECURE_CONTENT_TYPE_NOSNIFF = True
     
-    # 3. Force cookies to only be sent over HTTPS [cite: 1]
+    # 3. Force cookies to only be sent over HTTPS
     CSRF_COOKIE_SECURE = True
     SESSION_COOKIE_SECURE = True
     
@@ -72,6 +72,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',  # Added WhiteNoise here!
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -152,10 +153,12 @@ USE_TZ = True
 AUTH_USER_MODEL = 'accounts.CustomUser'
 
 
+# ==========================================
 # Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/6.0/howto/static-files/
-
+# ==========================================
 STATIC_URL = 'static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # ==========================================
 # Email / SMTP Configuration (Resend Sandbox)
