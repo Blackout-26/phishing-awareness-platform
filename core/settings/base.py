@@ -178,3 +178,5 @@ DEFAULT_FROM_EMAIL = 'onboarding@resend.dev'
 CELERY_BROKER_URL = 'memory://'
 # Execute tasks locally immediately for testing purposes
 CELERY_TASK_ALWAYS_EAGER = True
+
+LOGIN_URL = '/accounts/login/'
