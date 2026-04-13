@@ -14,7 +14,7 @@ urlpatterns = [
     # Hardened Admin Route
     path(ADMIN_URL, admin.site.urls),
     
-    # 🔐 NEW: Enable Django's built-in authentication URLs (login, logout, etc.)
+    # NEW: Enable Django's built-in authentication URLs (login, logout, etc.)
     path('accounts/', include('django.contrib.auth.urls')),
     
     path('', campaign_views.dashboard_view, name='dashboard'),
@@ -28,6 +28,9 @@ urlpatterns = [
     
     path('templates/', template_views.template_list_view, name='template_list'),
     path('templates/new/', template_views.template_create_view, name='template_create'),
+    
+    # NEW: Route all /targets/... URLs to the targets app
+    path('targets/', include('targets.urls')),
     
     # Route all /track/... URLs to the tracking app
     path('track/', include('tracking.urls')),
