@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block title %}Targets | PhishSim{% endblock %}
+{% block header %}TARGET_ROSTER{% endblock %}
+
+{% block content %}
+<div class="mb-6 flex justify-between items-center">
+    <p class="text-slate-400 font-mono text-sm">> Manage simulation targets and personnel.</p>
+    <a href="{% url 'target_create' %}" class="bg-cyan-600/20 text-cyan-400 border border-cyan-500/50 px-4 py-2 rounded font-mono text-sm hover:bg-cyan-600 hover:text-white transition shadow-[0_0_10px_rgba(6,182,212,0.1)]">
+        + ADD_NEW_TARGET
+    </a>
+</div>
+
+<div class="bg-slate-900 rounded-lg border border-slate-800 overflow-hidden shadow-lg">
+    <table class="w-full text-left border-collapse">
+        <thead>
+            <tr class="bg-slate-950 text-slate-500 text-xs font-mono uppercase tracking-widest border-b border-slate-800">
+                <th class="px-6 py-4 font-medium">Target_Name</th>
+                <th class="px-6 py-4 font-medium">Email_Address</th>
+                <th class="px-6 py-4 font-medium">Organization</th>
+            </tr>
+        </thead>
+        <tbody class="divide-y divide-slate-800/50 font-mono text-sm">
+            {% for target in targets %}
+            <tr class="hover:bg-slate-800/50 transition">
+                <td class="px-6 py-4 font-medium text-cyan-400">{{ target.first_name }} {{ target.last_name }}</td>
+                <td class="px-6 py-4 text-slate-300">{{ target.email }}</td>
+                <td class="px-6 py-4 text-slate-500">{{ target.organization }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="3" class="px-6 py-8 text-center text-slate-500 font-mono">
+                    [ NO TARGETS FOUND IN DATABASE ]<br>
+                    > Awaiting data entry.
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
