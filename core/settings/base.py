@@ -179,4 +179,9 @@ CELERY_BROKER_URL = 'memory://'
 # Execute tasks locally immediately for testing purposes
 CELERY_TASK_ALWAYS_EAGER = True
 
+# ==========================================
+# Authentication Routing
+# ==========================================
 LOGIN_URL = '/accounts/login/'
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/accounts/login/'
